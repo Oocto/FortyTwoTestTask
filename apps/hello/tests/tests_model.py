@@ -8,7 +8,7 @@ from model_mommy import mommy
 class SomeTestsModel(TestCase):
 
     def setUp(self):
-        self.my_instance = mommy.make('hello.Contact',id=2)
+        self.my_instance = mommy.make('hello.Contact', id=2)
 
     def test_the_model(self):
         """Test the model Contact"""
