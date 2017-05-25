@@ -67,6 +67,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'octo_db.sqlite3'),
+        'TEST_CHARSET': "utf8",
+        'TEST_COLLATION': "utf8_general_ci",
     }
 }
 
@@ -125,6 +127,11 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(BASE_DIR, 'templates'),
 )
+
+FIXTURE_DIRS = (
+    os.path.join(BASE_DIR, 'assets/fixtures'),
+)
+
 
 # Turn off south during test
 SOUTH_TESTS_MIGRATE = False

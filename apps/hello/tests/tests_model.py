@@ -22,3 +22,9 @@ class SomeTestsModel(TestCase):
         self.assertEqual(first_query.date, self.my_instance.date)
         self.assertEqual(first_query.skype, self.my_instance.skype)
         self.assertEqual(first_query.contacts, self.my_instance.contacts)
+
+    def test_that_data_base_is_not_empty(self):
+        """ Test that data base is not empty first objects loads from fixtures and second I made with model_mommy"""
+
+        self.assertIsNot(Contact.objects.all().count(), 0)
+        self.assertEqual(Contact.objects.all().count(), 2)
