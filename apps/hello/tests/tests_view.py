@@ -30,10 +30,9 @@ class SomeTests(TestCase):
         my_info = self.response.context_data['info']
         self.assertIsInstance(my_info, Contact)
 
-        model_instance = Contact.objects.all()
-        for c in model_instance:
-            self.assertIn(c.name, self.response.content)
-            self.assertIn(c.surname, self.response.content)
-            self.assertIn(c.email, self.response.content)
-            self.assertIn(c.jabber, self.response.content)
-            self.assertIn(c.skype, self.response.content)
+        model_instance = Contact.objects.first()
+        self.assertIn(model_instance.name, self.response.content)
+        self.assertIn(model_instance.surname, self.response.content)
+        self.assertIn(model_instance.email, self.response.content)
+        self.assertIn(model_instance.jabber, self.response.content)
+        self.assertIn(model_instance.skype, self.response.content)
