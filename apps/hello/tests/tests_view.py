@@ -31,8 +31,12 @@ class SomeTests(TestCase):
         self.assertIsInstance(my_info, Contact)
 
         model_instance = Contact.objects.first()
+        rendered_bio = model_instance.bio.split('.\n')
         self.assertIn(model_instance.name, self.response.content)
         self.assertIn(model_instance.surname, self.response.content)
         self.assertIn(model_instance.email, self.response.content)
         self.assertIn(model_instance.jabber, self.response.content)
+        self.assertIn(rendered_bio[0], self.response.content)
+        self.assertIn(rendered_bio[1], self.response.content)
         self.assertIn(model_instance.skype, self.response.content)
+        self.assertIn(model_instance.contacts, self.response.content)

@@ -12,3 +12,6 @@ class Contact(models.Model):
     jabber = models.EmailField()
     skype = models.CharField(max_length=200)
     contacts = models.TextField(blank=True)
+
+    def __unicode__(self):
+        return u'%s %s' % (self.name, self.surname)
