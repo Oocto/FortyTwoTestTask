@@ -3,7 +3,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>{% block title %}{% endblock title %}Site Name</title>
+        <title>{% block title %}42 coffecups{% endblock title %}</title>
 
         <meta http-equiv="X-UA-Compatible" content="chrome=IE7" />
 
@@ -25,7 +25,8 @@
             <nav class="navbar navbar-default">
                 <div class="container-fluid">
                     <div class="navbar-header">
-                        <a class="navbar-brand" href="#">42 Coffeecups</a>
+                        <a class="navbar-brand" href="{% url 'my_info' %}">42 Coffeecups</a>
+                        <a class="navbar-brand" href="{% url 'my_requests_story' %}">Requests</a>
                     </div>
                 </div>
             </nav>
