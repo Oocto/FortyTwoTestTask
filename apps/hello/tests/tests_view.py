@@ -40,3 +40,22 @@ class SomeTests(TestCase):
         self.assertIn(rendered_bio[1], self.response.content)
         self.assertIn(model_instance.skype, self.response.content)
         self.assertIn(model_instance.contacts, self.response.content)
+
+class SomeTestsRequestsView(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.response = self.client.get(reverse("my_requests_story"))
+    
+    def test_for_requests_template(self):
+        """Test for template correctness"""
+        self.assertTemplateUsed(self.response, 'my_requests_template.html')
+
+    def test_requests_view(self):
+        """Test for view its url """
+        response = self.client.get(reverse("my_requests_story"))
+        request_url = resolve('/requests')
+        self.assertEqual(request_url.func.__name__, 'Requests_view')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<th>Request method</th>', response.content)
+        self.assertIn(b'<th>Request link</th>', response.content)
+        self.assertIn(b'<th>Request date</th>', response.content)
