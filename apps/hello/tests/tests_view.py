@@ -62,3 +62,15 @@ class SomeTests(TestCase):
         self.assertIn(model_instance.bio.encode('utf-8'), response.content)
         self.assertIn(model_instance.skype.encode('utf-8'), response.content)
         self.assertIn(model_instance.contacts.encode('utf-8'), response.content)
+
+    def test_in_case_base_data_is_empty(self):
+        """Test that nothing breaks when database is empty"""
+
+        Contact.objects.all().delete()
+        obj_list = Contact.objects.all()
+        self.assertFalse(obj_list)
+
+        response = self.client.get(reverse("my_info"))
+        my_info = response.context_data['info']
+        self.assertIsNone(my_info)
+        self.assertEqual(response.status_code, 200)
