@@ -1,16 +1,19 @@
+# -*- coding: utf-8 -*-
 from django.test import TestCase
 from django.test import Client
 from django.core.urlresolvers import reverse, resolve
 from ..models import Contact
 from model_mommy import mommy
+from django.core import management
 # Create your tests here.
 
 
 class SomeTests(TestCase):
 
     def setUp(self):
+        management.call_command('flush', interactive=False, load_initial_data=False)
         self.client = Client()
-        self.my_instance = mommy.make('hello.Contact')
+        self.my_instance = mommy.make('hello.Contact', id=1)
         self.response = self.client.get(reverse("my_info"))
 
     def test_the_info_view(self):
@@ -31,12 +34,43 @@ class SomeTests(TestCase):
         self.assertIsInstance(my_info, Contact)
 
         model_instance = Contact.objects.first()
-        rendered_bio = model_instance.bio.split('.\n')
         self.assertIn(model_instance.name, self.response.content)
         self.assertIn(model_instance.surname, self.response.content)
         self.assertIn(model_instance.email, self.response.content)
         self.assertIn(model_instance.jabber, self.response.content)
-        self.assertIn(rendered_bio[0], self.response.content)
-        self.assertIn(rendered_bio[1], self.response.content)
+        self.assertIn(model_instance.bio, self.response.content)
         self.assertIn(model_instance.skype, self.response.content)
         self.assertIn(model_instance.contacts, self.response.content)
+
+    def test_the_unicode_in_data_base(self):
+        """Test if unicode is in data base"""
+
+        model_instance = Contact.objects.first()
+        model_instance.name = u'Олег'
+        model_instance.surname = u'Панчишин'
+        model_instance.bio = u'Працюю, після роботи, самостійно вивчаю Python, Django, JavaScript.'
+        model_instance.save()
+
+        response = self.client.get(reverse("my_info"))
+
+        model_instance = Contact.objects.get(id=1)
+
+        self.assertIn(model_instance.name.encode('utf-8'), response.content)
+        self.assertIn(model_instance.surname.encode('utf-8'), response.content)
+        self.assertIn(model_instance.email.encode('utf-8'), response.content)
+        self.assertIn(model_instance.jabber.encode('utf-8'), response.content)
+        self.assertIn(model_instance.bio.encode('utf-8'), response.content)
+        self.assertIn(model_instance.skype.encode('utf-8'), response.content)
+        self.assertIn(model_instance.contacts.encode('utf-8'), response.content)
+
+    def test_in_case_base_data_is_empty(self):
+        """Test that nothing breaks when database is empty"""
+
+        Contact.objects.all().delete()
+        obj_list = Contact.objects.all()
+        self.assertFalse(obj_list)
+
+        response = self.client.get(reverse("my_info"))
+        my_info = response.context_data['info']
+        self.assertIsNone(my_info)
+        self.assertEqual(response.status_code, 200)
