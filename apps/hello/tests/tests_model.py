@@ -9,7 +9,9 @@ from model_mommy import mommy
 class SomeTestsModel(TestCase):
 
     def setUp(self):
-        self.my_instance = mommy.make('hello.Contact', id=2, name=u'Олег', surname=u'Панчишин')
+        self.my_instance = mommy.make('hello.Contact', id=2, name=u'Олег', surname=u'Панчишин',
+                                      bio=u'Працюю, після роботи, самостійно вивчаю Python, Django, JavaScript.'
+                                      )
 
     def test_the_model(self):
         """Test the model Contact"""
@@ -29,10 +31,10 @@ class SomeTestsModel(TestCase):
 
         object_list = Contact.objects.all()
         self.assertTrue(object_list)  # Test that database list is not empty
-        self.assertIsNot(Contact.objects.all().count(), 0)
-        self.assertEqual(Contact.objects.all().count(), 2)  # Test that base data has saved 2 objects
 
     def test_the_unicode_in_base(self):
         """Test in case unicode in base data """
 
-        self.assertEqual(self.my_instance.__unicode__(), u'Олег Панчишин')
+        query = Contact.objects.get(id=2)
+        self.assertEqual(query.__unicode__(), u'Олег Панчишин')
+        self.assertEqual(query.bio, u'Працюю, після роботи, самостійно вивчаю Python, Django, JavaScript.')
